@@ -465,7 +465,7 @@ void jogar()
                 
                 clearScreen();
 
-                printf("Resultado da jogada por atributo: \n");
+                printf("Resultado da jogada por atributo: \n\n");
 
                 printf("Carta 01 - 1º Atributo: %.2f\n", cartaJogada[0].valorAtributo1Selecionado);
                 printf("Carta 02 - 1º Atributo: %.2f\n", cartaJogada[1].valorAtributo1Selecionado);
@@ -496,11 +496,11 @@ void jogar()
                 }
 
                 if (cartaVencedoraAtributo1 == 1)
-                  printf("Carta 01 vence no 1º atributo!\n");
+                  printf("\nCarta 01 vence no 1º atributo!\n\n");
                 else if (cartaVencedoraAtributo1 == 2)
-                  printf("Carta 02 vence no 1º atributo!\n");
+                  printf("\nCarta 02 vence no 1º atributo!\n\n");
                 else
-                  printf("Empate no 1º atributo!\n");
+                  printf("\nEmpate no 1º atributo!\n\n");
 
                 printf("Carta 01 - 2º Atributo: %.2f\n", cartaJogada[0].valorAtributo2Selecionado);
                 printf("Carta 02 - 2º Atributo: %.2f\n", cartaJogada[1].valorAtributo2Selecionado);
@@ -531,21 +531,21 @@ void jogar()
                 }
 
                 if (cartaVencedoraAtributo2 == 1)
-                  printf("Carta 01 vence no 2º atributo!\n");
+                  printf("\nCarta 01 vence no 2º atributo!\n\n");
                 else if (cartaVencedoraAtributo2 == 2)
-                  printf("Carta 02 vence no 2º atributo!\n");
+                  printf("\nCarta 02 vence no 2º atributo!\n\n");
                 else
-                  printf("Empate no 2º atributo!\n");
+                  printf("\nEmpate no 2º atributo!\n\n");
                 
-                printf("Soma dos Atributos da Carta 01: %.2f\n\n", cartaJogada[0].somaAtributosCarta);
-                printf("Soma dos Atributos da Carta 02: %.2f\n\n", cartaJogada[1].somaAtributosCarta);
+                printf("Soma dos Atributos da Carta 01: %.2f\n", cartaJogada[0].somaAtributosCarta);
+                printf("Soma dos Atributos da Carta 02: %.2f\n", cartaJogada[1].somaAtributosCarta);
                 
                 if (cartaJogada[0].somaAtributosCarta > cartaJogada[1].somaAtributosCarta)
-                  printf("Carta 01 é a vencedora da jogada!\n");
+                  printf("\nCarta 01 é a vencedora da jogada!\n");
                 else if (cartaJogada[0].somaAtributosCarta < cartaJogada[1].somaAtributosCarta)
-                  printf("Carta 02 é a vencedora da jogada!\n");
+                  printf("\nCarta 02 é a vencedora da jogada!\n");
                 else
-                  printf("A jogada terminou em empate!\n");
+                  printf("\nA jogada terminou em empate!\n");
 
                 printf("\nPressione qualquer tecla para continuar...\n");
                 clearInputBuffer();
