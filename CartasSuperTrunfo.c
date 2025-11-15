@@ -77,7 +77,7 @@ typedef struct {
 } Menu;
 
 Menu menuPrincipal[6];
-Menu menuAtributos[5];
+Menu menuAtributos[6];
 
 typedef struct {
   int idCartaCadastrada;
@@ -195,7 +195,7 @@ float calculaPibPerCapita(float pib, int populacao)
 
 void exibirDadosDaCarta(int indiceCarta)
 {
-    printf("\n--- Carta0%d ---\n", indiceCarta++);
+    printf("\n--- Carta0%d ---\n", indiceCarta + 1);
     if (carta[indiceCarta].estado == '\0') {
         printf("Estado: [Não fornecido]\n");
     } else {
@@ -216,9 +216,11 @@ void exibirMenuAtributos(int atributo1Selecionado, int atributo2Selecionado)
     printf("\n=== Desafio Super Trunfo - Cidades ===\n");
     printf("Escolha um atributo para comparação:\n");
 
-    for (int ma = 0; ma < 5; ma++)
+    for (int ma = 0; ma < 6; ma++)
     {
-      if (atributo1Selecionado == ma || atributo2Selecionado == ma)
+      int indiceSelecionado = ma + 1;
+
+      if (atributo1Selecionado == indiceSelecionado || atributo2Selecionado == indiceSelecionado)
         printf("| %d) %s (já selecionado)\n", menuAtributos[ma].id, menuAtributos[ma].descricao);
       else
         printf("| %d) %s \n", menuAtributos[ma].id, menuAtributos[ma].descricao);
@@ -255,6 +257,8 @@ void jogar()
     snprintf(menuAtributos[3].descricao, sizeof(menuAtributos[3].descricao), "Pontos Turísticos");
     menuAtributos[4].id = 5;
     snprintf(menuAtributos[4].descricao, sizeof(menuAtributos[4].descricao), "Densidade Populacional");
+    menuAtributos[5].id = 6;
+    snprintf(menuAtributos[5].descricao, sizeof(menuAtributos[5].descricao), "Voltar ao menu principal");
 
     do
     {
@@ -316,14 +320,14 @@ void jogar()
                 
                 // Exibir dados da Carta 01
                 if (carta[0].estado == '\0') {
-                  printf("Carta 01 não cadastrada.\n");
+                  printf("\nCarta 01 não cadastrada.\n");
                 } else {
                   exibirDadosDaCarta(0);
                 }
                 
                 // Exibir dados da Carta 02
                 if (carta[1].estado == '\0') {
-                  printf("Carta 02 não cadastrada.\n");
+                  printf("\nCarta 02 não cadastrada.\n");
                 } else {
                   exibirDadosDaCarta(1);
                 }
@@ -335,28 +339,56 @@ void jogar()
                 break;
             
             case 5:
-            
+
+                SELECAO_ATRIBUTO:
+
+                // Exibir dados da Carta 01
+                if (carta[0].estado == '\0') {
+                  printf("\nCarta 01 não cadastrada.\n");
+                  printf("\nPressione qualquer tecla para continuar...\n");
+                  clearInputBuffer();
+                  getch();
+                  break;
+                }
+                
+                // Exibir dados da Carta 02
+                if (carta[1].estado == '\0') {
+                  printf("\nCarta 02 não cadastrada.\n");
+                  printf("\nPressione qualquer tecla para continuar...\n");
+                  clearInputBuffer();
+                  getch();
+                  break;
+                }
+
                 printf("Opção 5 selecionada: Seleção de atributos.\n");
 
-                int atributo1Selecionado;
-                int atributo2Selecionado;
+                int atributo1Selecionado = 0;
+                int atributo2Selecionado = 0;
 
                 DadosJogada cartaJogada[2];
 
                 cartaJogada[0].idCartaCadastrada = 1; // Carta 01
                 cartaJogada[1].idCartaCadastrada = 2; // Carta 02
 
-                SELECAO_ATRIBUTO:
-
                 exibirMenuAtributos(atributo1Selecionado, atributo2Selecionado);
                 scanf("%d", &atributo1Selecionado);
                 
+                if (atributo1Selecionado == 6) {
+                    // Voltar ao menu principal
+                    break;
+                }
+
                 clearScreen();
                 printf("\n");
 
                 exibirMenuAtributos(atributo1Selecionado, atributo2Selecionado);
                 scanf("%d", &atributo2Selecionado);
                 
+                if (atributo2Selecionado == 6) {
+                    // Voltar ao menu principal
+                    break;
+                }
+
                 if (atributo2Selecionado == atributo1Selecionado) {
                     printf("Atributos iguais selecionados. Por favor, escolha atributos diferentes.\n");
                     getch();
@@ -435,8 +467,86 @@ void jogar()
 
                 printf("Resultado da jogada por atributo: \n");
 
-                //printf("1º Atributo: %d", )
+                printf("Carta 01 - 1º Atributo: %.2f\n", cartaJogada[0].valorAtributo1Selecionado);
+                printf("Carta 02 - 1º Atributo: %.2f\n", cartaJogada[1].valorAtributo1Selecionado);
+
+                int cartaVencedoraAtributo1 = 0;
+
+                switch (atributo1Selecionado)
+                {
+                  case 1: // População
+                  case 2: // Área
+                  case 3: // PIB
+                  case 4: // Pontos Turísticos
+                    if (cartaJogada[0].valorAtributo1Selecionado > cartaJogada[1].valorAtributo1Selecionado)
+                      cartaVencedoraAtributo1 = 1;
+                    else if (cartaJogada[0].valorAtributo1Selecionado < cartaJogada[1].valorAtributo1Selecionado)
+                      cartaVencedoraAtributo1 = 2;
+                    else
+                      cartaVencedoraAtributo1 = 0; /* empate */
+                    break;
+                  case 5: // Densidade Populacional
+                    if (cartaJogada[0].valorAtributo1Selecionado < cartaJogada[1].valorAtributo1Selecionado)
+                      cartaVencedoraAtributo1 = 1;
+                    else if (cartaJogada[0].valorAtributo1Selecionado > cartaJogada[1].valorAtributo1Selecionado)
+                      cartaVencedoraAtributo1 = 2;
+                    else
+                      cartaVencedoraAtributo1 = 0; /* empate */
+                    break;
+                }
+
+                if (cartaVencedoraAtributo1 == 1)
+                  printf("Carta 01 vence no 1º atributo!\n");
+                else if (cartaVencedoraAtributo1 == 2)
+                  printf("Carta 02 vence no 1º atributo!\n");
+                else
+                  printf("Empate no 1º atributo!\n");
+
+                printf("Carta 01 - 2º Atributo: %.2f\n", cartaJogada[0].valorAtributo2Selecionado);
+                printf("Carta 02 - 2º Atributo: %.2f\n", cartaJogada[1].valorAtributo2Selecionado);
+
+                int cartaVencedoraAtributo2 = 0;
+
+                switch (atributo2Selecionado)
+                {
+                  case 1: // População
+                  case 2: // Área
+                  case 3: // PIB
+                  case 4: // Pontos Turísticos
+                    if (cartaJogada[0].valorAtributo2Selecionado > cartaJogada[1].valorAtributo2Selecionado)
+                      cartaVencedoraAtributo2 = 1;
+                    else if (cartaJogada[0].valorAtributo2Selecionado < cartaJogada[1].valorAtributo2Selecionado)
+                      cartaVencedoraAtributo2 = 2;
+                    else
+                      cartaVencedoraAtributo2 = 0; /* empate */
+                    break;
+                  case 5: // Densidade Populacional
+                    if (cartaJogada[0].valorAtributo2Selecionado < cartaJogada[1].valorAtributo2Selecionado)
+                      cartaVencedoraAtributo2 = 1;
+                    else if (cartaJogada[0].valorAtributo2Selecionado > cartaJogada[1].valorAtributo2Selecionado)
+                      cartaVencedoraAtributo2 = 2;
+                    else
+                      cartaVencedoraAtributo2 = 0; /* empate */
+                    break;
+                }
+
+                if (cartaVencedoraAtributo2 == 1)
+                  printf("Carta 01 vence no 2º atributo!\n");
+                else if (cartaVencedoraAtributo2 == 2)
+                  printf("Carta 02 vence no 2º atributo!\n");
+                else
+                  printf("Empate no 2º atributo!\n");
                 
+                printf("Soma dos Atributos da Carta 01: %.2f\n\n", cartaJogada[0].somaAtributosCarta);
+                printf("Soma dos Atributos da Carta 02: %.2f\n\n", cartaJogada[1].somaAtributosCarta);
+                
+                if (cartaJogada[0].somaAtributosCarta > cartaJogada[1].somaAtributosCarta)
+                  printf("Carta 01 é a vencedora da jogada!\n");
+                else if (cartaJogada[0].somaAtributosCarta < cartaJogada[1].somaAtributosCarta)
+                  printf("Carta 02 é a vencedora da jogada!\n");
+                else
+                  printf("A jogada terminou em empate!\n");
+
                 printf("\nPressione qualquer tecla para continuar...\n");
                 clearInputBuffer();
                 getch();
