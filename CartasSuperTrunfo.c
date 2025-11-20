@@ -4,6 +4,14 @@
 #include <string.h>
 #include <ctype.h>
 
+#ifdef _WIN32
+  #include <windows.h>
+  /* sleep is POSIX (seconds); map to Windows Sleep (milliseconds) */
+  #ifndef sleep
+    #define sleep(x) Sleep((x) * 1000)
+  #endif
+#endif
+
 #if defined(_WIN32) || defined(_WIN64) // Implementação de getch compatível com conio.h para Windows
   #include <conio.h>
 #else // Implementação de getch compatível com conio.h para Unix/Linux/macOS
